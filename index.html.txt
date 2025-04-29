@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>RIICO Plot Map</title>
+  <title>plots Map</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
   <script src="https://js.arcgis.com/4.29/"></script>
   <style>
@@ -41,7 +41,7 @@
 
     // Step 3: Create GeoJSON Layer with Labels
     const plotBoundary = new GeoJSONLayer({
-      url: "https://raw.githubusercontent.com/sgligis/riico-maps/main/Plot%20Boundary.geojson",
+      url: "https://raw.githubusercontent.com/sgligis/plots/main/Plot%20Boundary.geojson",
       popupTemplate: {
         title: "Plot Details",
         content: "Plot ID: {PLOT_NUMBE}<br>Area: {RIICO_PLOT} sq m"
