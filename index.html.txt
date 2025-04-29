@@ -42,9 +42,9 @@
     });
 
     // Step 3: Create GeoJSON Layer with Labels
-    // Using jsDelivr CDN which is more reliable than GitHub raw
+    // Using jsDelivr CDN with correct filename
     const plotBoundary = new GeoJSONLayer({
-      url: "https://cdn.jsdelivr.net/gh/sgligis/riico-maps@main/Plot_Boundary.geojson",
+      url: "https://cdn.jsdelivr.net/gh/sgligis/plots@main/PlotBoundary.geojson",
       popupTemplate: {
         title: "Plot Details",
         content: "Plot ID: {PLOT_NUMBE}<br>Area: {RIICO_PLOT} sq m"
@@ -111,4 +111,20 @@
       const expandedExtent = new Extent({
         xmin: layerExtent.xmin - 0.01,
         ymin: layerExtent.ymin - 0.01,
-        xmax: layerExtent.xmax + 
+        xmax: layerExtent.xmax + 0.01,
+        ymax: layerExtent.ymax + 0.01,
+        spatialReference: layerExtent.spatialReference
+      });
+      
+      view.goTo(expandedExtent).catch((error) => {
+        console.warn("Could not zoom to full extent:", error);
+      });
+    }, (error) => {
+      console.error("Failed to load plot data:", error);
+      alert("Error: Could not load plot data. Check console for details.");
+    });
+  });
+</script>
+
+</body>
+</html>
