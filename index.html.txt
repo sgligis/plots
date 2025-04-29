@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>plots Map</title>
+  <title>RIICO PLOT Map</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css">
   <script src="https://js.arcgis.com/4.29/"></script>
   <style>
@@ -23,8 +23,10 @@
     "esri/Map",
     "esri/views/MapView",
     "esri/layers/GeoJSONLayer",
-    "esri/geometry/Extent"
-  ], function(Map, MapView, GeoJSONLayer, Extent) {
+    "esri/geometry/Extent",
+    "esri/widgets/LayerList",
+    "esri/widgets/Expand"
+  ], function(Map, MapView, GeoJSONLayer, Extent, LayerList, Expand) {
 
     // Step 1: Create Map
     const map = new Map({
@@ -40,8 +42,9 @@
     });
 
     // Step 3: Create GeoJSON Layer with Labels
+    // Using jsDelivr CDN which is more reliable than GitHub raw
     const plotBoundary = new GeoJSONLayer({
-      url: "https://raw.githubusercontent.com/sgligis/plots/main/Plot%20Boundary.geojson",
+      url: "https://cdn.jsdelivr.net/gh/sgligis/riico-maps@main/Plot_Boundary.geojson",
       popupTemplate: {
         title: "Plot Details",
         content: "Plot ID: {PLOT_NUMBE}<br>Area: {RIICO_PLOT} sq m"
@@ -89,28 +92,23 @@
     // Step 4: Add Layer to Map
     map.add(plotBoundary);
 
-    // Step 5: Zoom to the specific extent of your plots
-    // First wait for the layer to load
+    // Add layer list widget for debugging
+    const layerList = new LayerList({
+      view: view
+    });
+    view.ui.add(new Expand({
+      view: view,
+      content: layerList,
+      expandIconClass: "esri-icon-layers",
+      expandTooltip: "Layers"
+    }), "top-right");
+
+    // Step 5: Zoom to the specific extent of your plots with error handling
     plotBoundary.when(() => {
-      // Get the extent of the layer
       const layerExtent = plotBoundary.fullExtent;
       
       // Create a slightly larger extent to ensure all features are visible
       const expandedExtent = new Extent({
         xmin: layerExtent.xmin - 0.01,
         ymin: layerExtent.ymin - 0.01,
-        xmax: layerExtent.xmax + 0.01,
-        ymax: layerExtent.ymax + 0.01,
-        spatialReference: layerExtent.spatialReference
-      });
-      
-      // Zoom to this extent
-      view.goTo(expandedExtent).catch((error) => {
-        console.warn("Could not zoom to full extent:", error);
-      });
-    });
-  });
-</script>
-
-</body>
-</html>
+        xmax: layerExtent.xmax + 
